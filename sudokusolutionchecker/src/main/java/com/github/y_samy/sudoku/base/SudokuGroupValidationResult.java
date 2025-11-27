@@ -1,23 +1,36 @@
 package com.github.y_samy.sudoku.base;
 
+import java.util.List;
+
 import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
+import com.github.y_samy.sudoku.base.SudokuGroup.GroupType;
 
 public class SudokuGroupValidationResult {
-    private final int @NonNull [] invalidCellPositions;
+    private final @NonNull List<@NonNull Integer> invalidCellPositions;
+    private final int globalPosition;
+    private final @NonNull GroupType type;
 
-    public SudokuGroupValidationResult(int @Nullable [] invalidCellPositions) {
-        if (invalidCellPositions == null)
-            this.invalidCellPositions = new int[0];
-        else
-            this.invalidCellPositions = invalidCellPositions;
+    public SudokuGroupValidationResult(@NonNull List<@NonNull Integer> invalidCellPositions, int globalPosition,
+            @NonNull GroupType type) {
+
+        this.invalidCellPositions = invalidCellPositions;
+        this.globalPosition = globalPosition;
+        this.type = type;
+    }
+
+    public int getGlobalPosition() {
+        return globalPosition;
+    }
+
+    public SudokuGroup.GroupType getGroupType() {
+        return type;
     }
 
     public boolean isValid() {
-        return invalidCellPositions.length == 0;
+        return invalidCellPositions.size() == 0;
     }
 
-    public int @NonNull [] getInvalidCellPositions() {
+    public @NonNull List<@NonNull Integer> getInvalidCellPositions() {
         return invalidCellPositions;
     }
 }

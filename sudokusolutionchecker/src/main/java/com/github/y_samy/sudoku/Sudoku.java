@@ -9,17 +9,17 @@ public class Sudoku implements SudokuGroupFactory {
 
     @Override
     public @NonNull SudokuGroup createRow(int @NonNull [] @NonNull [] game, int position) {
-        return new SudokuRow(game[position - 1], position);
+        return new SudokuGroup(game[position - 1], position, SudokuGroup.GroupType.ROW);
     }
 
     @Override
     public @NonNull SudokuGroup createColumn(int @NonNull [] @NonNull [] game, int position) {
-        return new SudokuColumn(getColumnAt(game, position), position);
+        return new SudokuGroup(getColumnAt(game, position), position, SudokuGroup.GroupType.COLUMN);
     }
 
     @Override
     public @NonNull SudokuGroup createBox(int @NonNull [] @NonNull [] game, int position) {
-        return new SudokuBox(getBoxAt(game, position), position);
+        return new SudokuGroup(getBoxAt(game, position), position, SudokuGroup.GroupType.BOX);
     }
 
     private int @NonNull [] getColumnAt(int @NonNull [] @NonNull [] game, int position) {

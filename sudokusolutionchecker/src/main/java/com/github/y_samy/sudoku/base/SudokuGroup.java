@@ -1,12 +1,26 @@
 package com.github.y_samy.sudoku.base;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import org.jspecify.annotations.NonNull;
 
-public interface SudokuGroup {
-    enum GroupType {
+public class SudokuGroup {
+    public enum GroupType {
         ROW,
         COLUMN,
         BOX;
+    }
+
+    private final int cells @NonNull [];
+    private final int globalPosition;
+    private final @NonNull GroupType type;
+
+    public SudokuGroup(int @NonNull [] cells, int globalPosition, @NonNull GroupType type) {
+        this.cells = cells;
+        this.globalPosition = globalPosition;
+        this.type = type;
     }
 
     /**
@@ -16,7 +30,9 @@ public interface SudokuGroup {
      * 
      */
     @NonNull
-    public GroupType getType();
+    public GroupType getType() {
+        return type;
+    }
 
     /**
      * 
@@ -24,7 +40,9 @@ public interface SudokuGroup {
      *         relative to the entire grid
      * 
      */
-    public int getGlobalPosition();
+    public int getGlobalPosition() {
+        return globalPosition;
+    }
 
     /**
      * 
@@ -33,7 +51,29 @@ public interface SudokuGroup {
      *         problematic position (1-9) for a cell in the given Sudoku group
      * 
      */
-    public int @NonNull [] getCellsFlat();
+    public int @NonNull [] getCellsFlat() {
+        return cells;
+    }
 
-    public @NonNull SudokuGroupValidationResult validate();
+    public @NonNull SudokuGroupValidationResult validate() {
+        var positionMap = new HashMap<Integer, ArrayList<Integer>>(); // Cell Value : Cell Positions
+        for (int i = 0; i < 9; i++) {
+            var cellVal = cells[i];
+            var posList = positionMap.get(cellVal);
+            if (posList == null) {
+                posList = new ArrayList<Integer>(0);
+                positionMap.put(cellVal, posList);
+            }
+            posList.add(i + 1);
+        }
+        var invalidPositions = new ArrayList<Integer>(0);
+        for (var positions : positionMap.values()) {
+            if (positions.size() > 1)
+                invalidPositions.addAll(positions);
+        }
+        @SuppressWarnings("null")
+        @NonNull
+        List<@NonNull Integer> invalidPositionsList = List.copyOf(invalidPositions);
+        return new SudokuGroupValidationResult(invalidPositionsList, globalPosition, type);
+    }
 }
