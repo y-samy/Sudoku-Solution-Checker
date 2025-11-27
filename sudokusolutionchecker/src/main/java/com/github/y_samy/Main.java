@@ -93,21 +93,21 @@ public class Main {
             if (invalidRows.size() > 0) {
                 for (var row : invalidRows) {
                     System.out
-                            .println("" + row.getGroupType() + row.getGlobalPosition() + row.getInvalidCellPositions());
+                            .println(row.getGroupType() + " " + row.getGlobalPosition() + row.getInvalidCellPositions());
                 }
                 System.out.println("----------------");
             }
             if (invalidCols.size() > 0) {
                 for (var col : invalidCols) {
                     System.out
-                            .println("" + col.getGroupType() + col.getGlobalPosition() + col.getInvalidCellPositions());
+                            .println(col.getGroupType() + " " + col.getGlobalPosition() + col.getInvalidCellPositions());
                 }
                 System.out.println("----------------");
             }
             if (invalidBoxes.size() > 0) {
                 for (var box : invalidBoxes) {
                     System.out
-                            .println("" + box.getGroupType() + box.getGlobalPosition() + box.getInvalidCellPositions());
+                            .println(box.getGroupType() + " " + box.getGlobalPosition() + box.getInvalidCellPositions());
                 }
                 System.out.println("----------------");
             }
