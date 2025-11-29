@@ -109,14 +109,10 @@ public class Main {
                     System.out.println("----------------");
             }
             for (var box : results.get(GroupType.BOX)) {
-                printSep = false;
                 if (!box.isValid()) {
                     System.out.println(
                             box.getGroupType() + " " + box.getGlobalPosition() + " " + box.getInvalidCellPositions());
-                    printSep = true;
                 }
-                if (printSep)
-                    System.out.println("----------------");
             }
         }
     }
