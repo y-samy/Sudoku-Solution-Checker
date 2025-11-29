@@ -95,19 +95,21 @@ public class Main {
                             row.getGroupType() + " " + row.getGlobalPosition() + " " + row.getInvalidCellPositions());
                     printSep = true;
                 }
-                if (printSep)
-                    System.out.println("----------------");
             }
+            if (printSep)
+                System.out.println("----------------");
+            printSep = false;
             for (var col : results.get(GroupType.COLUMN)) {
-                printSep = false;
+
                 if (!col.isValid()) {
                     System.out.println(
                             col.getGroupType() + " " + col.getGlobalPosition() + " " + col.getInvalidCellPositions());
                     printSep = true;
                 }
-                if (printSep)
-                    System.out.println("----------------");
             }
+            if (printSep)
+                System.out.println("----------------");
+            printSep = false;
             for (var box : results.get(GroupType.BOX)) {
                 if (!box.isValid()) {
                     System.out.println(
