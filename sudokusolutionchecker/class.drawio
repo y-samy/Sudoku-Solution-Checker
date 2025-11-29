@@ -1,0 +1,115 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" version="29.2.1">
+  <diagram id="8QaK2Aa-CW9gK7sgZtus" name="Page-1">
+    <mxGraphModel dx="1569" dy="1029" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="2" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="&lt;i style=&quot;&quot;&gt;SudokoThreadedCheckerFactory&lt;/i&gt;" vertex="1">
+          <mxGeometry height="180" width="540" x="390" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="4" parent="2" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" value="" vertex="1">
+          <mxGeometry height="18" width="540" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="5" parent="2" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ newSingleThreadValidator(game :&amp;nbsp;&lt;span style=&quot;color: rgb(0, 0, 0); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251);&quot;&gt;int [] []&lt;/span&gt;&lt;span style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251); background-color: transparent;&quot;&gt;&amp;nbsp;&lt;/span&gt;&amp;nbsp;): ArrayList&amp;lt;SudokuGroupValidationResult&amp;gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp;&lt;span style=&quot;color: rgb(0, 0, 0); background-color: transparent;&quot;&gt;newThreeThreadValidator&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: rgb(63, 63, 63);&quot;&gt;(game :&amp;nbsp;&lt;span style=&quot;color: rgb(0, 0, 0); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251);&quot;&gt;int [] []&lt;/span&gt;&lt;span style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251); background-color: transparent;&quot;&gt;&amp;nbsp;&lt;/span&gt;&amp;nbsp;&amp;nbsp;):&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;color: rgb(0, 0, 0); background-color: transparent;&quot;&gt;ArrayList&amp;lt;SudokuGroupValidationResult&amp;gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;div style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251);&quot;&gt;&lt;br style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251);&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;div style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251);&quot;&gt;&lt;span style=&quot;color: rgb(63, 63, 63);&quot;&gt;+&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251); background-color: transparent; color: rgb(0, 0, 0);&quot;&gt;newNineThreadValidator&lt;/span&gt;&lt;span style=&quot;scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251); background-color: transparent; color: rgb(63, 63, 63);&quot;&gt;(game :&amp;nbsp;&lt;span style=&quot;color: rgb(0, 0, 0); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251);&quot;&gt;int [] []&lt;/span&gt;&lt;span style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251); background-color: transparent;&quot;&gt;&amp;nbsp;&lt;/span&gt;&amp;nbsp;&amp;nbsp;):&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;color: rgb(0, 0, 0); background-color: transparent;&quot;&gt;ArrayList&amp;lt;SudokuGroupValidationResult&amp;gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251);&quot;&gt;&lt;span style=&quot;scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251); background-color: transparent; color: rgb(63, 63, 63);&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251);&quot;&gt;&lt;span style=&quot;scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251); background-color: transparent; color: rgb(63, 63, 63);&quot;&gt;+ newTwentySevenThreadValidator&lt;/span&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;(game :&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;int [] []&lt;/span&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;&amp;nbsp;):&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;color: rgb(0, 0, 0); background-color: transparent;&quot;&gt;ArrayList&amp;lt;SudokuGroupValidationResult&amp;gt;&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="136" width="540" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="9" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="FutureSudokoChecker" vertex="1">
+          <mxGeometry height="80" width="540" x="390" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="10" parent="9" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="- getGameGroups(game :&amp;nbsp;&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;int [] []&amp;nbsp;&lt;/span&gt;) : ArrayList &amp;lt;SudokoGroup&amp;gt;&amp;nbsp;" vertex="1">
+          <mxGeometry height="26" width="540" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="11" parent="9" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;- validateThreaded(game :&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251); color: rgb(0, 0, 0);&quot;&gt;int [] [], threads : int&lt;/span&gt;&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;) :&amp;nbsp;&lt;span style=&quot;color: rgb(63, 63, 63); background-color: transparent;&quot;&gt;&amp;nbsp;ArrayList&amp;lt;&lt;/span&gt;&lt;span style=&quot;color: rgb(63, 63, 63); background-color: transparent;&quot;&gt;SudokuGroupValidationResult&amp;gt;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: rgb(63, 63, 63);&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;color: rgb(63, 63, 63); background-color: transparent;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="26" width="540" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="12" parent="9" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ field: type" vertex="1">
+          <mxGeometry height="2" width="540" y="78" as="geometry" />
+        </mxCell>
+        <mxCell id="13" edge="1" parent="1" style="endArrow=block;dashed=1;endFill=0;endSize=12;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.506;entryY=1.004;entryDx=0;entryDy=0;entryPerimeter=0;" value="">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <mxPoint x="660.25" y="359.46" as="sourcePoint" />
+            <mxPoint x="659.75" y="300.00399999999996" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="18" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="&lt;i&gt;&lt;b&gt;SudokoLoader&lt;/b&gt;&lt;/i&gt;" vertex="1">
+          <mxGeometry height="52" width="170" x="1370" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="20" parent="18" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ load(var1 : String) :&lt;span style=&quot;color: rgb(63, 63, 63); background-color: transparent;&quot;&gt;int [] []&lt;/span&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;&amp;nbsp;&amp;nbsp;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="26" width="170" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="22" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="CsvSudokoLoader" vertex="1">
+          <mxGeometry height="52" width="140" x="1370" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="26" edge="1" parent="1" source="22" style="endArrow=block;dashed=1;endFill=0;endSize=12;html=1;exitX=0.571;exitY=0;exitDx=0;exitDy=0;entryX=0.506;entryY=1.004;entryDx=0;entryDy=0;entryPerimeter=0;exitPerimeter=0;" value="">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <mxPoint x="1450.5" y="251.45999999999998" as="sourcePoint" />
+            <mxPoint x="1450" y="192.00399999999996" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="27" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="SudokoGroup" vertex="1">
+          <mxGeometry height="90" width="300" x="930" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="28" parent="27" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;u&gt;- cells: int []&lt;/u&gt;&lt;div&gt;&lt;u&gt;-&amp;nbsp;&lt;span style=&quot;color: rgb(63, 63, 63); background-color: transparent;&quot;&gt;globalPosition : int&lt;/span&gt;&lt;/u&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;&lt;u&gt;- type : GroupType&lt;/u&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(63, 63, 63); background-color: transparent;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(63, 63, 63); background-color: transparent;&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="64" width="300" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="31" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="&amp;lt;&amp;lt;enumeration&amp;gt;&amp;gt;&lt;div&gt;GroupType&lt;/div&gt;" vertex="1">
+          <mxGeometry height="108" width="140" x="1530" y="559" as="geometry" />
+        </mxCell>
+        <mxCell id="32" parent="31" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="ROW" vertex="1">
+          <mxGeometry height="26" width="140" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="33" parent="31" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="COLUMN" vertex="1">
+          <mxGeometry height="26" width="140" y="56" as="geometry" />
+        </mxCell>
+        <mxCell id="34" parent="31" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="BOX" vertex="1">
+          <mxGeometry height="26" width="140" y="82" as="geometry" />
+        </mxCell>
+        <mxCell id="38" edge="1" parent="1" style="endArrow=diamondThin;endFill=1;endSize=24;html=1;" value="">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <mxPoint x="1670" y="610" as="sourcePoint" />
+            <mxPoint x="1230" y="610.44" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="39" parent="1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" value="1" vertex="1">
+          <mxGeometry height="30" width="60" x="1230" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="40" parent="1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" value="1" vertex="1">
+          <mxGeometry height="30" width="60" x="1470" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="42" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;" value="+ getType(): GroupType&lt;div&gt;+ getGlobalPosition(): int&lt;/div&gt;&lt;div&gt;+ getCellsFlat(): int[]&lt;/div&gt;&lt;div&gt;+ validate():SudokoGroupValidationResult&lt;/div&gt;" vertex="1">
+          <mxGeometry height="80" width="300" x="930" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="48" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="&lt;i&gt;&lt;b&gt;SudokoGroupFactory&lt;/b&gt;&lt;/i&gt;" vertex="1">
+          <mxGeometry height="130" width="350" x="1620" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="49" parent="48" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ createRow(game : int [] [], position : int) :&amp;nbsp;SudokoGroup&lt;div&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: rgb(0, 0, 0);&quot;&gt;+ createColumn(game : int [] [], position : int) :&amp;nbsp;SudokoGroup&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251);&quot;&gt;&amp;nbsp; &amp;nbsp;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: rgb(0, 0, 0);&quot;&gt;+ createBox(game : int [] [], position : int) :&amp;nbsp;SudokoGroup&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251);&quot;&gt;&amp;nbsp; &amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;&amp;nbsp; &amp;nbsp;&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="104" width="350" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="52" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="Sudoko" vertex="1">
+          <mxGeometry height="66" width="290" x="1690" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="56" parent="52" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" value="+ getColumnAt(game : int [] [], position : int) : int []&lt;div&gt;&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;+ getBoxAt(game : int [] [], position : int) : int []&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="40" width="290" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="55" edge="1" parent="1" source="52" style="endArrow=block;dashed=1;endFill=0;endSize=12;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.608;entryY=1.002;entryDx=0;entryDy=0;entryPerimeter=0;" target="49" value="">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <mxPoint x="1790" y="398" as="sourcePoint" />
+            <mxPoint x="1790" y="300.00399999999996" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="57" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="SudokoGroupValidationResult" vertex="1">
+          <mxGeometry height="180" width="590" x="1790" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="58" parent="57" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="-&lt;u&gt; invalidCellPositions : List&amp;lt; Integer&amp;gt;&lt;/u&gt;&lt;div&gt;&lt;u&gt;- globalPosition : int&lt;/u&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;&lt;u&gt;- type :&amp;nbsp;&lt;/u&gt;&lt;/span&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;&lt;u&gt;GroupType&lt;/u&gt;&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="54" width="590" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="59" parent="57" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" value="" vertex="1">
+          <mxGeometry height="8" width="590" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="60" parent="57" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ SudokuGroupValidationResult(invalidCellPositions : List&amp;lt; Integer&amp;gt; , globalPosition : int , type : GroupType&amp;nbsp;)&lt;div&gt;+ getGlobalPosition() : int&lt;/div&gt;&lt;div&gt;+&amp;nbsp;getGroupType() :&amp;nbsp;SudokuGroup.GroupType&lt;/div&gt;&lt;div&gt;+ isValid() : boolean&lt;/div&gt;&lt;div&gt;+&amp;nbsp;getInvalidCellPositions() :&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;List&amp;lt; Integer&amp;gt;&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="92" width="590" y="88" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
