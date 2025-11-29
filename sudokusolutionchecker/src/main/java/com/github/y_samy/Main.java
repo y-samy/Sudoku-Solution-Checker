@@ -2,40 +2,45 @@ package com.github.y_samy;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 
 import org.jspecify.annotations.NonNull;
 
 import com.github.y_samy.io.CsvSudokuLoader;
-import com.github.y_samy.sudoku.base.SudokuGroup;
+import com.github.y_samy.sudoku.base.SudokuGroup.GroupType;
 import com.github.y_samy.sudoku.base.SudokuGroupValidationResult;
+import com.github.y_samy.threading.BatchFuturesSudokuChecker;
 import com.github.y_samy.threading.FuturesSudokuChecker;
+import com.github.y_samy.threading.SudokuThreadedCheckerFactory;
 
 public class Main {
     private static String filePath = "";
     private static int threads;
+    private static boolean benchmark = false;
+    private static SudokuThreadedCheckerFactory checkerFactory = new FuturesSudokuChecker();
 
-    private static boolean parseArgs(String[] args) {
-        if (args.length < 4)
+    private static boolean parseArgs(String[] argArr) {
+        try {
+            var args = List.of(argArr);
+            if (!args.contains("-f") || !args.contains("-t"))
+                return false;
+            filePath = args.get(args.indexOf("-f") + 1);
+            threads = Integer.parseInt(args.get(args.indexOf("-t") + 1));
+            if (threads != 0 && threads != 1 && threads != 3 && threads != 9 && threads != 27)
+                return false;
+            benchmark = (args.contains("--benchmark") || args.contains("-b"));
+            if (args.contains("--futures-type") && args.get(args.indexOf("--futures-type") + 1).equals("batch"))
+                checkerFactory = new BatchFuturesSudokuChecker();
+            return true;
+        } catch (IndexOutOfBoundsException e) {
             return false;
-        if (args[0].equals("-f") && args[2].equals("-t")) {
-            filePath = args[1];
-            threads = Integer.parseInt(args[3]);
-            if (threads != 0 && threads != 1 && threads != 3 && threads != 9 && threads != 27)
-                return false;
-            return true;
-        } else if (args[2].equals("-f") && args[0].equals("-t")) {
-            filePath = args[3];
-            threads = Integer.parseInt(args[1]);
-            if (threads != 0 && threads != 1 && threads != 3 && threads != 9 && threads != 27)
-                return false;
-            return true;
         }
-        return false;
-
     }
 
     private static void scanArgs() {
+
         var sc = new Scanner(System.in);
         System.out.print("Enter filename: ");
         filePath = sc.nextLine();
@@ -50,7 +55,6 @@ public class Main {
 
     public static void main(String[] args) {
         var loader = new CsvSudokuLoader();
-        var checkerFactory = new FuturesSudokuChecker();
         if (!parseArgs(args))
             scanArgs();
         int @NonNull [] @NonNull [] game = new int[0][0];
@@ -60,7 +64,8 @@ public class Main {
             System.out.println("An error occured while loading the game.");
             System.exit(1);
         }
-        ArrayList<SudokuGroupValidationResult> results = null;
+        HashMap<GroupType, ArrayList<SudokuGroupValidationResult>> results = null;
+        long startTime = System.nanoTime();
         if (threads == 1 || threads == 0)
             results = checkerFactory.newSingleThreadValidator(game);
         else if (threads == 3)
@@ -69,47 +74,49 @@ public class Main {
             results = checkerFactory.newNineThreadValidator(game);
         else if (threads == 27)
             results = checkerFactory.newTwentySevenThreadValidator(game);
-
-        var invalidRows = new ArrayList<SudokuGroupValidationResult>(0);
-        var invalidCols = new ArrayList<SudokuGroupValidationResult>(0);
-        var invalidBoxes = new ArrayList<SudokuGroupValidationResult>(0);
-        var valid = true;
-        for (var result : results) {
-            if (!result.isValid()) {
-                valid = false;
-                if (result.getGroupType() == SudokuGroup.GroupType.ROW)
-                    invalidRows.add(result);
-                if (result.getGroupType() == SudokuGroup.GroupType.COLUMN)
-                    invalidCols.add(result);
-                if (result.getGroupType() == SudokuGroup.GroupType.BOX)
-                    invalidBoxes.add(result);
-            }
+        long delta = System.nanoTime() - startTime;
+        if (benchmark) {
+            double deltaMillis = (double) delta / 1_000_000.0;
+            System.out.println("Benchmark result -- time taken: " + deltaMillis + "ms");
         }
+
+        var valid = !results.values().stream().flatMap(values -> values.stream()).filter(result -> !result.isValid())
+                .findFirst().isPresent();
 
         if (valid) {
             System.out.println("VALID");
         } else {
             System.out.println("INVALID");
-            if (invalidRows.size() > 0) {
-                for (var row : invalidRows) {
-                    System.out
-                            .println(row.getGroupType() + " " + row.getGlobalPosition() + row.getInvalidCellPositions());
+            var printSep = false;
+            for (var row : results.get(GroupType.ROW)) {
+                printSep = false;
+                if (!row.isValid()) {
+                    System.out.println(
+                            row.getGroupType() + " " + row.getGlobalPosition() + " " + row.getInvalidCellPositions());
+                    printSep = true;
                 }
-                System.out.println("----------------");
+                if (printSep)
+                    System.out.println("----------------");
             }
-            if (invalidCols.size() > 0) {
-                for (var col : invalidCols) {
-                    System.out
-                            .println(col.getGroupType() + " " + col.getGlobalPosition() + col.getInvalidCellPositions());
+            for (var col : results.get(GroupType.COLUMN)) {
+                printSep = false;
+                if (!col.isValid()) {
+                    System.out.println(
+                            col.getGroupType() + " " + col.getGlobalPosition() + " " + col.getInvalidCellPositions());
+                    printSep = true;
                 }
-                System.out.println("----------------");
+                if (printSep)
+                    System.out.println("----------------");
             }
-            if (invalidBoxes.size() > 0) {
-                for (var box : invalidBoxes) {
-                    System.out
-                            .println(box.getGroupType() + " " + box.getGlobalPosition() + box.getInvalidCellPositions());
+            for (var box : results.get(GroupType.BOX)) {
+                printSep = false;
+                if (!box.isValid()) {
+                    System.out.println(
+                            box.getGroupType() + " " + box.getGlobalPosition() + " " + box.getInvalidCellPositions());
+                    printSep = true;
                 }
-                System.out.println("----------------");
+                if (printSep)
+                    System.out.println("----------------");
             }
         }
     }
