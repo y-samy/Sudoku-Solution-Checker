@@ -8,7 +8,7 @@ import org.jspecify.annotations.NonNull;
 import com.github.y_samy.sudoku.Group;
 
 public abstract class BatchChecker extends BoardChecker {
-    protected ArrayList<List<Group>> batches;
+    protected ArrayList<List<Group>> batches = new ArrayList<List<Group>>();
 
     protected BatchChecker(int @NonNull [] @NonNull [] board, int batchCount) {
         super(board);
