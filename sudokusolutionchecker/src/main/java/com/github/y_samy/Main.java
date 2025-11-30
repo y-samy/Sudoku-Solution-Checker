@@ -74,7 +74,7 @@ public class Main {
         if (threads == 1 || threads == 0)
             checker = BoardCheckerFactory.newSequentialChecker(game);
         else
-            checker = BoardCheckerFactory.newConcurrentValidator(game, threads, strategy);
+            checker = BoardCheckerFactory.newConcurrentChecker(game, threads, strategy);
         long startTime = System.nanoTime();
         var results = checker.validate();
         long delta = System.nanoTime() - startTime;

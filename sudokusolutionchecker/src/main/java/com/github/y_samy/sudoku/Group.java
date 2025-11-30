@@ -26,10 +26,9 @@ public class Group {
     }
 
     /**
-     * 
-     * @return {@code @NonNull GroupType}: one of the following {@code "ROW"},
-     *         {@code "COLUMN"}, {@code "BOX"}
-     * 
+     * @param groupType the type of Sudoku group ({@link Group.GroupType#ROW ROW},
+     *                  {@link Group.GroupType#COLUMN COLUMN}, or
+     *                  {@link Group.GroupType#BOX BOX})
      */
     @NonNull
     public GroupType getType() {
