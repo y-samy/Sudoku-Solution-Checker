@@ -26,7 +26,7 @@ public class Main {
                 return false;
             filePath = args.get(args.indexOf("-f") + 1);
             threads = Integer.parseInt(args.get(args.indexOf("-t") + 1));
-            if (threads != 0 && threads != 1 && threads != 3 && threads != 9 && threads != 27)
+            if (threads != 0 && threads != 1 && threads != 3 && threads != 27)
                 return false;
             benchmark = (args.contains("--benchmark") || args.contains("-b"));
             if (args.contains("-s")) {
@@ -53,7 +53,7 @@ public class Main {
         while (true) {
             System.out.print("Enter thread count: ");
             threads = sc.nextInt();
-            if (threads == 0 || threads == 1 || threads == 3 || threads == 9 || threads == 27)
+            if (threads == 0 || threads == 1 || threads == 3 || threads == 27)
                 break;
         }
         sc.close();
@@ -85,15 +85,14 @@ public class Main {
         if (results == null)
             System.exit(1);
         @SuppressWarnings("null")
-        var valid = !results.values().stream().flatMap(values -> values.stream()).filter(result -> !result.isValid())
-                .findFirst().isPresent();
-
+        var valid = !results.stream().filter(result -> !result.isValid()).findFirst().isPresent();
+        var sortedResults = BoardChecker.sortResults(results);
         if (valid) {
             System.out.println("VALID");
         } else {
             System.out.println("INVALID");
             var printSep = false;
-            for (var row : results.get(GroupType.ROW)) {
+            for (var row : sortedResults.get(GroupType.ROW)) {
                 printSep = false;
                 if (!row.isValid()) {
                     System.out.println(
@@ -104,7 +103,7 @@ public class Main {
             if (printSep)
                 System.out.println("----------------");
             printSep = false;
-            for (var col : results.get(GroupType.COLUMN)) {
+            for (var col : sortedResults.get(GroupType.COLUMN)) {
 
                 if (!col.isValid()) {
                     System.out.println(
@@ -115,7 +114,7 @@ public class Main {
             if (printSep)
                 System.out.println("----------------");
             printSep = false;
-            for (var box : results.get(GroupType.BOX)) {
+            for (var box : sortedResults.get(GroupType.BOX)) {
                 if (!box.isValid()) {
                     System.out.println(
                             box.getGroupType() + " " + box.getGlobalPosition() + " " + box.getInvalidCellPositions());

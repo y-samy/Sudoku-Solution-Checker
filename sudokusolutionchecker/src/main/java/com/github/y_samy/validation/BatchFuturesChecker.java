@@ -1,7 +1,6 @@
 package com.github.y_samy.validation;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -10,7 +9,6 @@ import java.util.concurrent.Future;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-import com.github.y_samy.sudoku.Group.GroupType;
 import com.github.y_samy.validation.base.BatchChecker;
 
 public class BatchFuturesChecker extends BatchChecker {
@@ -22,13 +20,13 @@ public class BatchFuturesChecker extends BatchChecker {
     }
 
     @Override
-    public @Nullable HashMap<GroupType, ArrayList<GroupValidationResult>> validate() {
+    public @Nullable ArrayList<GroupValidationResult> validate() {
         var awaitedFutures = new ArrayList<Future<?>>();
-        results = newResultMap();
+        results = new ArrayList<GroupValidationResult>();
         for (var batch : batches) {
             awaitedFutures.add(executor.submit(() -> {
                 batch.stream().forEach(
-                        group -> results.get(group.getType()).add(group.validate()));
+                        group -> results.add(group.validate()));
             }));
         }
         try {

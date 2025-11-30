@@ -1,12 +1,10 @@
 package com.github.y_samy.validation;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-import com.github.y_samy.sudoku.Group.GroupType;
 import com.github.y_samy.validation.base.BoardChecker;
 
 public class SequentialChecker extends BoardChecker {
@@ -16,9 +14,9 @@ public class SequentialChecker extends BoardChecker {
     }
 
     @Override
-    public @Nullable HashMap<GroupType, ArrayList<GroupValidationResult>> validate() {
-        var results = newResultMap();
-        board.forEach(group -> results.get(group.getType()).add(group.validate()));
+    public @Nullable ArrayList<GroupValidationResult> validate() {
+        var results = new ArrayList<GroupValidationResult>();
+        board.forEach(group -> results.add(group.validate()));
         return results;
     }
 
