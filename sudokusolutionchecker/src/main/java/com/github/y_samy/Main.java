@@ -1,27 +1,24 @@
 package com.github.y_samy;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
 import org.jspecify.annotations.NonNull;
 
 import com.github.y_samy.io.CsvSudokuLoader;
-import com.github.y_samy.sudoku.base.SudokuGroup.GroupType;
-import com.github.y_samy.sudoku.base.SudokuGroupValidationResult;
-import com.github.y_samy.threading.BatchFuturesSudokuChecker;
-import com.github.y_samy.threading.BatchThreadedSudokuChecker;
-import com.github.y_samy.threading.FuturesSudokuChecker;
-import com.github.y_samy.threading.SudokuCheckerFactory;
+import com.github.y_samy.sudoku.Group.GroupType;
+import com.github.y_samy.validation.BoardCheckerFactory;
+import com.github.y_samy.validation.BoardCheckerFactory.ConcurrencyStrategy;
+import com.github.y_samy.validation.base.BoardChecker;
 
 public class Main {
-    private static String filePath = "";
+    private static @NonNull String filePath = "";
     private static int threads;
     private static boolean benchmark = false;
-    private static SudokuCheckerFactory checkerFactory = null;
+    private static ConcurrencyStrategy strategy = ConcurrencyStrategy.THREADED;
 
+    @SuppressWarnings("null")
     private static boolean parseArgs(String[] argArr) {
         try {
             var args = List.of(argArr);
@@ -32,14 +29,14 @@ public class Main {
             if (threads != 0 && threads != 1 && threads != 3 && threads != 9 && threads != 27)
                 return false;
             benchmark = (args.contains("--benchmark") || args.contains("-b"));
-            if (args.contains("-m")) {
+            if (args.contains("-s")) {
                 var type = args.get(args.indexOf("-m") + 1);
                 if (type.equals("futures"))
-                    checkerFactory = new FuturesSudokuChecker();
+                    strategy = ConcurrencyStrategy.FUTURES;
                 else if (type.equals("batch-futures"))
-                    checkerFactory = new BatchFuturesSudokuChecker();
+                    strategy = ConcurrencyStrategy.BATCH_FUTURES;
                 else if (type.equals("batch-threads"))
-                    checkerFactory = new BatchThreadedSudokuChecker();
+                    strategy = ConcurrencyStrategy.THREADED;
             }
             return true;
         } catch (IndexOutOfBoundsException e) {
@@ -47,6 +44,7 @@ public class Main {
         }
     }
 
+    @SuppressWarnings("null")
     private static void scanArgs() {
 
         var sc = new Scanner(System.in);
@@ -65,8 +63,6 @@ public class Main {
         var loader = new CsvSudokuLoader();
         if (!parseArgs(args))
             scanArgs();
-        if (checkerFactory == null)
-            checkerFactory = new BatchThreadedSudokuChecker();
         int @NonNull [] @NonNull [] game = new int[0][0];
         try {
             game = loader.load(filePath);
@@ -74,22 +70,21 @@ public class Main {
             System.out.println("An error occured while loading the game.");
             System.exit(1);
         }
-        HashMap<GroupType, ArrayList<SudokuGroupValidationResult>> results = null;
-        long startTime = System.nanoTime();
+        BoardChecker checker = null;
         if (threads == 1 || threads == 0)
-            results = checkerFactory.newSingleThreadValidator(game);
-        else if (threads == 3)
-            results = checkerFactory.newThreeThreadValidator(game);
-        else if (threads == 9)
-            results = checkerFactory.newNineThreadValidator(game);
-        else if (threads == 27)
-            results = checkerFactory.newTwentySevenThreadValidator(game);
+            checker = BoardCheckerFactory.newSequentialChecker(game);
+        else
+            checker = BoardCheckerFactory.newConcurrentValidator(game, threads, strategy);
+        long startTime = System.nanoTime();
+        var results = checker.validate();
         long delta = System.nanoTime() - startTime;
         if (benchmark) {
             double deltaMillis = (double) delta / 1_000_000.0;
             System.out.println("Benchmark result -- time taken: " + deltaMillis + "ms");
         }
-
+        if (results == null)
+            System.exit(1);
+        @SuppressWarnings("null")
         var valid = !results.values().stream().flatMap(values -> values.stream()).filter(result -> !result.isValid())
                 .findFirst().isPresent();
 

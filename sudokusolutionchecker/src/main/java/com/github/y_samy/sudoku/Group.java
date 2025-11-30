@@ -1,4 +1,4 @@
-package com.github.y_samy.sudoku.base;
+package com.github.y_samy.sudoku;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,7 +6,9 @@ import java.util.List;
 
 import org.jspecify.annotations.NonNull;
 
-public class SudokuGroup {
+import com.github.y_samy.validation.GroupValidationResult;
+
+public class Group {
     public enum GroupType {
         ROW,
         COLUMN,
@@ -17,7 +19,7 @@ public class SudokuGroup {
     private final int globalPosition;
     private final @NonNull GroupType type;
 
-    public SudokuGroup(int @NonNull [] cells, int globalPosition, @NonNull GroupType type) {
+    public Group(int @NonNull [] cells, int globalPosition, @NonNull GroupType type) {
         this.cells = cells;
         this.globalPosition = globalPosition;
         this.type = type;
@@ -55,7 +57,7 @@ public class SudokuGroup {
         return cells;
     }
 
-    public @NonNull SudokuGroupValidationResult validate() {
+    public @NonNull GroupValidationResult validate() {
         var positionMap = new HashMap<Integer, ArrayList<Integer>>(); // Cell Value : Cell Positions
         for (int i = 0; i < 9; i++) {
             var cellVal = cells[i];
@@ -74,6 +76,6 @@ public class SudokuGroup {
         @SuppressWarnings("null")
         @NonNull
         List<@NonNull Integer> invalidPositionsList = List.copyOf(invalidPositions);
-        return new SudokuGroupValidationResult(invalidPositionsList, globalPosition, type);
+        return new GroupValidationResult(invalidPositionsList, globalPosition, type);
     }
 }

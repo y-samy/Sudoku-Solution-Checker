@@ -1,16 +1,17 @@
-package com.github.y_samy.sudoku.base;
+package com.github.y_samy.validation;
 
 import java.util.List;
 
 import org.jspecify.annotations.NonNull;
-import com.github.y_samy.sudoku.base.SudokuGroup.GroupType;
 
-public class SudokuGroupValidationResult {
+import com.github.y_samy.sudoku.Group.GroupType;
+
+public class GroupValidationResult {
     private final @NonNull List<@NonNull Integer> invalidCellPositions;
     private final int globalPosition;
     private final @NonNull GroupType type;
 
-    public SudokuGroupValidationResult(@NonNull List<@NonNull Integer> invalidCellPositions, int globalPosition,
+    public GroupValidationResult(@NonNull List<@NonNull Integer> invalidCellPositions, int globalPosition,
             @NonNull GroupType type) {
 
         this.invalidCellPositions = invalidCellPositions;
@@ -22,7 +23,7 @@ public class SudokuGroupValidationResult {
         return globalPosition;
     }
 
-    public SudokuGroup.GroupType getGroupType() {
+    public GroupType getGroupType() {
         return type;
     }
 
