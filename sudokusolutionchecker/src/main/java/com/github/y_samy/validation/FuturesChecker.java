@@ -1,7 +1,6 @@
 package com.github.y_samy.validation;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -10,7 +9,6 @@ import java.util.concurrent.Future;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-import com.github.y_samy.sudoku.Group.GroupType;
 import com.github.y_samy.validation.base.BoardChecker;
 
 public class FuturesChecker extends BoardChecker {
@@ -22,12 +20,12 @@ public class FuturesChecker extends BoardChecker {
     }
 
     @Override
-    public @Nullable HashMap<GroupType, ArrayList<GroupValidationResult>> validate() {
+    public @Nullable ArrayList<GroupValidationResult> validate() {
         var awaitedFutures = new ArrayList<Future<?>>();
-        var results = newResultMap();
+        var results = new ArrayList<GroupValidationResult>();
         board.forEach(group -> {
             awaitedFutures.add(executor.submit(() -> {
-                results.get(group.getType()).add(group.validate());
+                results.add(group.validate());
             }));
         });
         try {

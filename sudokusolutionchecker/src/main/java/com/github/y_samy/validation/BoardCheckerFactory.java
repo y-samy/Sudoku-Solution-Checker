@@ -18,12 +18,12 @@ public class BoardCheckerFactory {
     }
 
     @NonNull
-    public static BoardChecker newConcurrentValidator(int @NonNull [] @NonNull [] game, int concurrentTasksCount) {
+    public static BoardChecker newConcurrentChecker(int @NonNull [] @NonNull [] game, int concurrentTasksCount) {
         return new BatchThreadedChecker(game, concurrentTasksCount);
     }
 
     @NonNull
-    public static BoardChecker newConcurrentValidator(int @NonNull [] @NonNull [] game, int concurrentTasksCount,
+    public static BoardChecker newConcurrentChecker(int @NonNull [] @NonNull [] game, int concurrentTasksCount,
             ConcurrencyStrategy strategy) {
         if (strategy == ConcurrencyStrategy.THREADED)
             return new BatchThreadedChecker(game, concurrentTasksCount);

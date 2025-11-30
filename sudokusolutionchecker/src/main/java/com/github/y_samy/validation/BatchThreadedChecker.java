@@ -1,12 +1,9 @@
 package com.github.y_samy.validation;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-import com.github.y_samy.sudoku.Group.GroupType;
 import com.github.y_samy.validation.base.BatchChecker;
 
 public class BatchThreadedChecker extends BatchChecker {
@@ -17,15 +14,15 @@ public class BatchThreadedChecker extends BatchChecker {
         threads = new ArrayList<Thread>(concurrentTasksCount);
         for (var batch : batches) {
             var t = new Thread(() -> {
-                batch.stream().forEach(group -> results.get(group.getType()).add(group.validate()));
+                batch.stream().forEach(group -> results.add(group.validate()));
             });
             threads.add(t);
         }
     }
 
     @Override
-    public @Nullable HashMap<GroupType, ArrayList<GroupValidationResult>> validate() {
-        results = newResultMap();
+    public @Nullable ArrayList<GroupValidationResult> validate() {
+        results = new ArrayList<GroupValidationResult>();
         for (var t : threads)
             t.start();
 
