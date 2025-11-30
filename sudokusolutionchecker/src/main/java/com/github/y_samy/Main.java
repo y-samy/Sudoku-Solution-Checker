@@ -9,14 +9,11 @@ import org.jspecify.annotations.NonNull;
 import com.github.y_samy.io.CsvSudokuLoader;
 import com.github.y_samy.sudoku.Group.GroupType;
 import com.github.y_samy.validation.BoardCheckerFactory;
-import com.github.y_samy.validation.BoardCheckerFactory.ConcurrencyStrategy;
 import com.github.y_samy.validation.base.BoardChecker;
 
 public class Main {
     private static @NonNull String filePath = "";
     private static int threads;
-    private static boolean benchmark = false;
-    private static ConcurrencyStrategy strategy = ConcurrencyStrategy.THREADED;
 
     @SuppressWarnings("null")
     private static boolean parseArgs(String[] argArr) {
@@ -28,16 +25,6 @@ public class Main {
             threads = Integer.parseInt(args.get(args.indexOf("-t") + 1));
             if (threads != 0 && threads != 1 && threads != 3 && threads != 27)
                 return false;
-            benchmark = (args.contains("--benchmark") || args.contains("-b"));
-            if (args.contains("-s")) {
-                var type = args.get(args.indexOf("-m") + 1);
-                if (type.equals("futures"))
-                    strategy = ConcurrencyStrategy.FUTURES;
-                else if (type.equals("batch-futures"))
-                    strategy = ConcurrencyStrategy.BATCH_FUTURES;
-                else if (type.equals("batch-threads"))
-                    strategy = ConcurrencyStrategy.THREADED;
-            }
             return true;
         } catch (IndexOutOfBoundsException e) {
             return false;
@@ -74,14 +61,8 @@ public class Main {
         if (threads == 1 || threads == 0)
             checker = BoardCheckerFactory.newSequentialChecker(game);
         else
-            checker = BoardCheckerFactory.newConcurrentChecker(game, threads, strategy);
-        long startTime = System.nanoTime();
+            checker = BoardCheckerFactory.newConcurrentChecker(game, threads);
         var results = checker.validate();
-        long delta = System.nanoTime() - startTime;
-        if (benchmark) {
-            double deltaMillis = (double) delta / 1_000_000.0;
-            System.out.println("Benchmark result -- time taken: " + deltaMillis + "ms");
-        }
         if (results == null)
             System.exit(1);
         @SuppressWarnings("null")

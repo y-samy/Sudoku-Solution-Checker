@@ -6,11 +6,6 @@ import com.github.y_samy.validation.base.BoardChecker;
 
 public class BoardCheckerFactory {
 
-    public enum ConcurrencyStrategy {
-        THREADED,
-        FUTURES,
-        BATCH_FUTURES;
-    }
 
     @NonNull
     public static BoardChecker newSequentialChecker(int @NonNull [] @NonNull [] game) {
@@ -20,17 +15,6 @@ public class BoardCheckerFactory {
     @NonNull
     public static BoardChecker newConcurrentChecker(int @NonNull [] @NonNull [] game, int concurrentTasksCount) {
         return new BatchThreadedChecker(game, concurrentTasksCount);
-    }
-
-    @NonNull
-    public static BoardChecker newConcurrentChecker(int @NonNull [] @NonNull [] game, int concurrentTasksCount,
-            ConcurrencyStrategy strategy) {
-        if (strategy == ConcurrencyStrategy.THREADED)
-            return new BatchThreadedChecker(game, concurrentTasksCount);
-        else if (strategy == ConcurrencyStrategy.FUTURES)
-            return new FuturesChecker(game, concurrentTasksCount);
-        else
-            return new BatchFuturesChecker(game, concurrentTasksCount);
     }
 
 }
