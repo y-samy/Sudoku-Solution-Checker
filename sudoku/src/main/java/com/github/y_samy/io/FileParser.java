@@ -1,10 +1,11 @@
 package com.github.y_samy.io;
 
 import java.io.IOException;
+import java.nio.file.Path;
 
 import org.jspecify.annotations.NonNull;
 
-public interface SudokuLoader {
+public interface FileParser {
     /**
      * 
      * @param filePath relative or absolute path to valid game solution
@@ -18,8 +19,10 @@ public interface SudokuLoader {
      * @throws NumberFormatException can occur if file contents are invalid
      * 
      * @return non-null; {@code Integer[9][9]} array of the cells on the Sudoku
-     *         board
+     *         board, cells are assumed to already have values between 0 and 9
      * 
      */
-    public int @NonNull [] @NonNull [] load(@NonNull String filePath) throws IOException, NumberFormatException;
+    public int[][] load(String filePath) throws IOException, NumberFormatException;
+
+    public void write(Path filePath, int[][] board) throws IOException;
 }
