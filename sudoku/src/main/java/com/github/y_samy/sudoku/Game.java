@@ -1,7 +1,9 @@
 package com.github.y_samy.sudoku;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
@@ -9,7 +11,7 @@ public class Game {
 
     private int referenceId;
 
-    private int[][] board;
+    private final int[][] board;
     private Map<Integer, Integer> modifiableCells;
     private DifficultyEnum difficulty;
     private Stack<UserAction> oldProgress;
@@ -21,7 +23,16 @@ public class Game {
 
     private Game(int[][] board) {
         this.board = board;
-        referenceId = Arrays.deepHashCode(board);
+        referenceId = Math.abs(Arrays.deepHashCode(board));
+    }
+
+    Game(int[][] board, int[] modifiedCells) {
+        this.board = board;
+        int i = 0;
+        for (int r = 0; r < 9; r++)
+            for (int c = 0; c < 9; c++)
+                if (board[r][c] == 0)
+                    modifiableCells.put(r * 9 + c, modifiedCells[i++]);
     }
 
     public int getReferenceId() {
@@ -50,6 +61,23 @@ public class Game {
 
     public int[][] getBoard() {
         return board;
+    }
+
+    public int[][] copyBoard() {
+        var newBoard = new int[9][9];
+        for (int r = 0; r < 9; r++)
+            for (int c = 0; c < 9; c++)
+                newBoard[r][c] = getValueAt(r, c);
+        return newBoard;
+    }
+
+    public List<Integer> getEmptyCellPositions() {
+        var l = new ArrayList<Integer>();
+        for (var entry : modifiableCells.entrySet()) {
+            if (entry.getValue() == 0)
+                l.add(entry.getKey());
+        }
+        return l;
     }
 
     public int getValueAt(int row, int column) {
@@ -94,6 +122,37 @@ public class Game {
 
     public DifficultyEnum getDifficulty() {
         return difficulty;
+    }
+
+    public List<Integer> getInvalidModifiable() {
+        var results = new ArrayList<Integer>(0);
+        var rowMasks = new int[9];
+        var columnMasks = new int[9];
+        var boxMasks = new int[9];
+        for (var row = 0; row < 9; row++) {
+            for (var col = 0; col < 9; col++) {
+                int cellValue = getValueAt(row, col);
+
+                if (cellValue == 0)
+                    continue;
+
+                // invalidity check
+                int box = (row / 3) * 3 + (col / 3);
+                int mask = 1 << (cellValue - 1);
+
+                if ((rowMasks[row] & mask) != 0)
+                    results.add(row * 9 + col);
+                if ((columnMasks[col] & mask) != 0)
+                    results.add(row * 9 + col);
+                if ((boxMasks[box] & mask) != 0)
+                    results.add(row * 9 + col);
+
+                rowMasks[row] |= mask;
+                columnMasks[col] |= mask;
+                boxMasks[box] |= mask;
+            }
+        }
+        return results;
     }
 
     public boolean isValid() {

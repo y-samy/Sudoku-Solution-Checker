@@ -11,20 +11,65 @@ public class KeypadView extends JPanel {
     private JButton[] numButtons;
     private JButton delBtn;
     private JButton undoBtn;
-    private JButton redoBtn;
+    private JButton solveBtn;
 
-    private CellModifiedCallback onKeyPress = (v) -> {
-    }; // default no-op
+    // default no-ops
+    private CellModifiedCallback onModify = (v) -> {
+    };
+    private UndoPressedCallback onUndo = () -> {
+    };
+    private SolvePressedCallback onSolve = () -> {
+    };
 
-    public KeypadView(CellModifiedCallback keyPressCallback) {
-        if (keyPressCallback != null)
-            onKeyPress = keyPressCallback;
+    public KeypadView(CellModifiedCallback onModify, UndoPressedCallback onUndo, SolvePressedCallback onSolve) {
+        if (onModify != null)
+            this.onModify = onModify;
+        if (onUndo != null)
+            this.onUndo = onUndo;
+        if (onSolve != null)
+            this.onSolve = onSolve;
         numButtons = new JButton[9];
         initComponents();
     }
 
+    public CellModifiedCallback getOnModify() {
+        return onModify;
+    }
+
+    public void setOnModify(CellModifiedCallback onModify) {
+        if (onModify == null)
+            this.onModify = (v) -> {
+            }; // no-op
+        else
+            this.onModify = onModify;
+    }
+
+    public UndoPressedCallback getOnUndo() {
+        return onUndo;
+    }
+
+    public void setOnUndo(UndoPressedCallback onUndo) {
+        if (onUndo == null)
+            this.onUndo = () -> {
+            }; // no-op
+        else
+            this.onUndo = onUndo;
+    }
+
+    public SolvePressedCallback getOnSolve() {
+        return onSolve;
+    }
+
+    public void setOnSolve(SolvePressedCallback onSolve) {
+        if (onSolve == null)
+            this.onSolve = () -> {
+            }; // no-op
+        else
+            this.onSolve = onSolve;
+    }
+
     public KeypadView() {
-        this(null);
+        this(null, null, null);
     }
 
     public void setEnabled(int numBtn, boolean enabled) {
@@ -39,16 +84,8 @@ public class KeypadView extends JPanel {
         undoBtn.setEnabled(enabled);
     }
 
-    public void setRedoEnabled(boolean enabled) {
-        redoBtn.setEnabled(enabled);
-    }
-
-    public void setModificationCallback(CellModifiedCallback keypressCallback) {
-        if (keypressCallback == null)
-            onKeyPress = (v) -> {
-            }; // no-op
-        else
-            onKeyPress = keypressCallback;
+    public void setSolveEnabled(boolean enabled) {
+        solveBtn.setEnabled(enabled);
     }
 
     private void initComponents() {
@@ -57,7 +94,7 @@ public class KeypadView extends JPanel {
             final int val = i;
             var btn = new JButton(String.valueOf(i));
             btn.addActionListener((evt) -> {
-                onKeyPress.callback(val);
+                getOnModify().callback(val);
             });
             add(btn);
             numButtons[i - 1] = btn;
@@ -66,7 +103,7 @@ public class KeypadView extends JPanel {
         var delIcon = new ImageIcon(delImg.getScaledInstance(16, 16, Image.SCALE_SMOOTH));
         delBtn = new JButton(delIcon);
         delBtn.addActionListener((evt) -> {
-            onKeyPress.callback(0);
+            getOnModify().callback(0);
         });
         add(delBtn);
 
@@ -74,16 +111,16 @@ public class KeypadView extends JPanel {
         var undoIcon = new ImageIcon(undoImg.getScaledInstance(16, 16, Image.SCALE_SMOOTH));
         undoBtn = new JButton(undoIcon);
         undoBtn.addActionListener((evt) -> {
-            onKeyPress.callback(0);
+            getOnUndo().callback();
         });
         add(undoBtn);
 
-        var redoImg = new ImageIcon(getClass().getResource("/icons/redo.png")).getImage();
+        var redoImg = new ImageIcon(getClass().getResource("/icons/solve.png")).getImage();
         var redoIcon = new ImageIcon(redoImg.getScaledInstance(16, 16, Image.SCALE_SMOOTH));
-        redoBtn = new JButton(redoIcon);
-        redoBtn.addActionListener((evt) -> {
-            onKeyPress.callback(0);
+        solveBtn = new JButton(redoIcon);
+        solveBtn.addActionListener((evt) -> {
+            getOnSolve().callback();
         });
-        add(redoBtn);
+        add(solveBtn);
     }
 }

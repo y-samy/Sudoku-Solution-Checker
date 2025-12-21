@@ -68,7 +68,7 @@ public class BoardView extends JPanel {
         }
     }
 
-    private JToggleButton getSelectedCell() {
+    public JToggleButton getSelectedCell() {
         for (var cell : cellList)
             if (cell.isSelected())
                 return cell;
@@ -77,6 +77,7 @@ public class BoardView extends JPanel {
 
     public int getSelectedRow() {
         var cell = getSelectedCell();
+        if (cell == null) return -1;
         var cellIdx = cellList.indexOf(cell);
         var row = cellIdx / 9;
         return row;
@@ -84,6 +85,7 @@ public class BoardView extends JPanel {
 
     public int getSelectedColumn() {
         var cell = getSelectedCell();
+        if (cell == null) return -1;
         var cellIdx = cellList.indexOf(cell);
         var column = cellIdx % 9;
         return column;

@@ -7,6 +7,7 @@ import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +21,7 @@ public class FileStorage implements Storage {
     private Map<String, File> puzzleFolders;
     private FileParser parser;
 
-    public FileStorage(FileParser parser) throws MalformedStorageException {
+    public FileStorage(FileParser parser, String[] difficulties) throws MalformedStorageException {
         this.parser = parser;
         rootFolder = new File("Sudoku Storage");
         ensureFolder(rootFolder);
@@ -28,10 +29,11 @@ public class FileStorage implements Storage {
         currentGameFolder = new File(rootFolder, "incomplete");
         ensureFolder(currentGameFolder);
         logfile = new File(currentGameFolder, "logfile");
-        var difficultyFolders = List.of(rootFolder.listFiles());
-        difficultyFolders.removeIf(folder -> folder.getName().equals("incomplete"));
-        for (var folder : difficultyFolders) {
-            puzzleFolders.put(folder.getName(), folder);
+        puzzleFolders = new HashMap<>();
+        for (var difficulty : difficulties) {
+            var folder = new File(rootFolder, difficulty);
+            ensureFolder(folder);
+            puzzleFolders.put(difficulty, folder);
         }
     }
 
@@ -47,28 +49,27 @@ public class FileStorage implements Storage {
 
     @Override
     public boolean hasNewPuzzles() {
-        var puzzleLists = new ArrayList<List<String>>();
+        var puzzleLists = new ArrayList<ArrayList<String>>();
         for (var folder : puzzleFolders.values()) {
-            puzzleLists.add(Arrays.stream(folder.list()).map(fileName -> fileName.split("-")[1]).toList());
+            puzzleLists.add(new ArrayList<>(
+                    Arrays.stream(folder.list()).map(fileName -> fileName.split("-")[1]).toList()));
         }
+        if (puzzleLists.size() == 0)
+            return false;
         var commonPuzzles = puzzleLists.get(0);
         for (var puzzleList : puzzleLists)
             commonPuzzles.retainAll(puzzleList);
+        commonPuzzles.remove(getCurrentPuzzleId());
         return commonPuzzles.size() > 0;
     }
 
-    public int[][] readCurrentGame() throws MalformedStorageException {
+    public String getCurrentPuzzleId() {
         if (!hasCurrentPuzzle())
-            throw new MalformedStorageException();
+            return "";
         var filename = Arrays.stream(currentGameFolder.list()).filter(name -> !name.equals("logfile")).findFirst();
         if (filename.isEmpty())
-            throw new MalformedStorageException();
-        var filepath = new File(currentGameFolder, filename.get()).getAbsolutePath();
-        try {
-            return parser.load(filepath);
-        } catch (IOException e) {
-            throw new MalformedStorageException();
-        }
+            return "";
+        return filename.get().split("-")[1];
     }
 
     @Override
@@ -76,10 +77,9 @@ public class FileStorage implements Storage {
         if (!hasCurrentPuzzle())
             throw new IOException();
         var filename = Arrays.stream(currentGameFolder.list()).filter(name -> !name.equals("logfile"))
-                .findFirst().orElseThrow(IOException::new).split("-");
-        var difficulty = filename[0];
-        var puzzleId = filename[1];
-        var puzzlePath = new File(puzzleFolders.get(difficulty), puzzleId).getAbsolutePath();
+                .findFirst().orElseThrow(IOException::new);
+        var difficulty = filename.split("-")[0];
+        var puzzlePath = new File(puzzleFolders.get(difficulty), filename).getAbsolutePath();
         try {
             return parser.load(puzzlePath);
         } catch (IOException e) {
@@ -107,8 +107,11 @@ public class FileStorage implements Storage {
     public int[][] loadAndStartPuzzle(String difficulty) throws MalformedStorageException {
         var puzzleLists = new ArrayList<List<String>>();
         for (var folder : puzzleFolders.values()) {
-            puzzleLists.add(Arrays.stream(folder.list()).map(fileName -> fileName.split("-")[1]).toList());
+            puzzleLists.add(new ArrayList<>(
+                    Arrays.stream(folder.list()).map(fileName -> fileName.split("-")[1]).toList()));
         }
+        if (puzzleLists.size() == 0)
+            throw new MalformedStorageException();
         var commonPuzzles = puzzleLists.get(0);
         for (var puzzleList : puzzleLists)
             commonPuzzles.retainAll(puzzleList);

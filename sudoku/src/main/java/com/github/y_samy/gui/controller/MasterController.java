@@ -2,32 +2,134 @@ package com.github.y_samy.gui.controller;
 
 import java.io.IOException;
 
+import javax.swing.JOptionPane;
+
+import com.github.y_samy.gui.MainWindow;
 import com.github.y_samy.gui.model.Catalog;
 import com.github.y_samy.gui.model.Driver;
 import com.github.y_samy.gui.model.InvalidGame;
 import com.github.y_samy.gui.model.Loader;
 import com.github.y_samy.gui.model.NotFoundException;
 import com.github.y_samy.gui.model.SolutionInvalidException;
+import com.github.y_samy.gui.view.MasterView;
 import com.github.y_samy.gui.view.board.BoardView;
 import com.github.y_samy.gui.view.keypad.KeypadView;
+import com.github.y_samy.gui.view.mainmenu.MainMenuView;
 import com.github.y_samy.io.storage.Storage;
 import com.github.y_samy.sudoku.DifficultyEnum;
 import com.github.y_samy.sudoku.Game;
 
 public class MasterController implements Viewable {
 
-    private KeypadView keypadView;
-    private BoardView boardView;
+    private MasterView view;
+    private KeypadView keypad;
+    private BoardView board;
+    private MainMenuView mainmenu;
     private Loader loader;
     private Driver driver;
     private Catalog catalog;
     private Storage storage;
+    private Game displayedGame;
 
-    public MasterController(Storage gameStorage) {
+    public MasterController(Storage gameStorage, MasterView view) {
         loader = new Loader(gameStorage);
         driver = new Driver(gameStorage);
         catalog = new Catalog(gameStorage);
         storage = gameStorage;
+        this.view = view;
+        board = view.getBoardView();
+        keypad = view.getKeypadView();
+        mainmenu = view.getMainMenuView();
+        registerCallbacks();
+        displayMainMenu();
+    }
+
+    private void registerCallbacks() {
+        mainmenu.setOnContinueGame(() -> {
+            try {
+                displayGame(getCurrentGame());
+            } catch (NotFoundException e) {
+                showMainMenuError("A storage error has ocurred.");
+            }
+        });
+
+        mainmenu.setOnStartNewGame((String difficulty) -> {
+            try {
+                displayGame(getGame(DifficultyEnum.valueOf(difficulty)));
+            } catch (NotFoundException e) {
+                showMainMenuError("A storage error has ocurred.");
+            }
+        });
+
+        mainmenu.setOnAddToCatalog((String filePath) -> {
+            try {
+                driveGames(filePath);
+                updateMainMenu();
+            } catch (SolutionInvalidException e) {
+                showMainMenuError("An invalid solution or solution path was provided.");
+            }
+        });
+
+        board.setSelectionCallback(() -> {
+            toggleSelection(board.getSelectedCell() != null);
+        });
+
+        keypad.setOnModify((value) -> {
+            displayedGame.setValueAt(value, board.getSelectedRow(), board.getSelectedColumn());
+            updateGameDisplay();
+        });
+
+        keypad.setOnSolve(() -> {
+
+        });
+
+        keypad.setOnUndo(() -> {
+            try {
+                undoLastLog();
+                displayedGame.undo(false);
+            } catch (IOException e) {
+                showMainMenuError("A storage error has ocurred.");
+            }
+        });
+    }
+
+    private void toggleSelection(boolean enabled) {
+        for (int i = 1; i <= 9; i++)
+            keypad.setEnabled(i, enabled);
+        keypad.setEraseEnabled(enabled);
+    }
+
+    private void displayGame(Game game) {
+        displayedGame = game;
+        updateGameDisplay();
+        view.showGame();
+    }
+
+    private void updateGameDisplay() {
+        for (int r = 0; r < 9; r++) {
+            for (int c = 0; c < 9; c++) {
+                board.setCellValue(r, c, displayedGame.getValueAt(r, c));
+                board.setCellSelectable(r, c, displayedGame.modifiable(r, c));
+                board.markValid(r, c);
+            }
+        }
+        for (int invalidCellIdx : displayedGame.getInvalidModifiable())
+            board.markInvalid(invalidCellIdx / 9, invalidCellIdx % 9);
+        keypad.setUndoEnabled(displayedGame.canUndo(false));
+    }
+
+    private void updateMainMenu() {
+        try {
+            mainmenu.setContinueBtnEnabled(getCatalog().current());
+            mainmenu.setNewGameBtnEnabled(getCatalog().allModesExist());
+        } catch (IOException e) {
+            MainWindow.showStorageFailure();
+        }
+    }
+
+    private void displayMainMenu() {
+        updateMainMenu();
+        view.showMainMenu();
     }
 
     @Override
@@ -61,7 +163,6 @@ public class MasterController implements Viewable {
         } catch (IOException e) {
             throw new SolutionInvalidException();
         }
-
     }
 
     @Override
@@ -83,6 +184,13 @@ public class MasterController implements Viewable {
 
     public void undoLastLog() throws IOException {
         storage.removeLastAction();
+    }
+
+    private void showMainMenuError(String error) {
+        JOptionPane.showMessageDialog(null, error,
+                "An error ocurred",
+                JOptionPane.ERROR_MESSAGE);
+        displayMainMenu();
     }
 
 }

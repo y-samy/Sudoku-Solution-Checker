@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.jspecify.annotations.NonNull;
@@ -36,8 +37,18 @@ public class CsvSudokuParser implements FileParser {
 
     @Override
     public void write(Path filePath, int[][] board) throws IOException {
+        var lines = new ArrayList<String>();
+        for (int r = 0; r < 9; r++) {
+            var line = "";
+            for (int c = 0; c < 9; c++) {
+                line += String.valueOf(board[r][c]);
+                if (c + 1 < 9)
+                    line += ",";
+            }
+            lines.add(line);
+        }
         Files.write(filePath,
-                Arrays.stream(board).map(row -> row.toString().replace("[", "").replace("]", "")).toList(),
+                lines,
                 StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE);
     }
 }
