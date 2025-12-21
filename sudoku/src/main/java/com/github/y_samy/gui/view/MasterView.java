@@ -1,5 +1,8 @@
 package com.github.y_samy.gui.view;
 
+import java.io.IOException;
+
+import com.github.y_samy.gui.model.InvalidGame;
 import com.github.y_samy.gui.model.NotFoundException;
 import com.github.y_samy.gui.model.SolutionInvalidException;
 import com.github.y_samy.sudoku.UserAction;
@@ -31,13 +34,13 @@ public class MasterView implements Controllable {
     }
 
     @Override
-    public int[][] solveGame(int[][] game) {
+    public int[][] solveGame(int[][] game) throws InvalidGame {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'solveGame'");
     }
 
     @Override
-    public void logUserAction(UserAction userAction) {
+    public void logUserAction(UserAction userAction) throws IOException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'logUserAction'");
     }
