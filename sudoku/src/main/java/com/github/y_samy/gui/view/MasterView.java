@@ -3,7 +3,6 @@ package com.github.y_samy.gui.view;
 import java.awt.CardLayout;
 import java.io.IOException;
 
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.github.y_samy.gui.model.InvalidGame;

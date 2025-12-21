@@ -55,7 +55,7 @@ public class Game {
         this(board, difficulty);
         for (var action : progress) {
             oldProgress.push(action);
-            coerceValue(action.row, action.row, action.currentValue);
+            coerceValue(action.row, action.column, action.currentValue);
         }
     }
 
@@ -95,8 +95,8 @@ public class Game {
     public void setValueAt(int row, int column, int value) {
         if (!modifiable(row, column))
             return;
-        modifiableCells.put(row * 9 + column, value);
         newProgress.push(new UserAction(row, column, getValueAt(row, column), value));
+        modifiableCells.put(row * 9 + column, value);
     }
 
     private void coerceValue(int row, int column, int value) {
@@ -139,13 +139,12 @@ public class Game {
                 // invalidity check
                 int box = (row / 3) * 3 + (col / 3);
                 int mask = 1 << (cellValue - 1);
-
-                if ((rowMasks[row] & mask) != 0)
-                    results.add(row * 9 + col);
-                if ((columnMasks[col] & mask) != 0)
-                    results.add(row * 9 + col);
-                if ((boxMasks[box] & mask) != 0)
-                    results.add(row * 9 + col);
+                int idx = row * 9 + col;
+                if (modifiableCells.containsKey(idx)) {
+                    if ((rowMasks[row] & mask) != 0 || (columnMasks[col] & mask) != 0
+                            || (boxMasks[box] & mask) != 0)
+                        results.add(row * 9 + col);
+                }
 
                 rowMasks[row] |= mask;
                 columnMasks[col] |= mask;

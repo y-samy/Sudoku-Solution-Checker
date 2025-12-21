@@ -9,6 +9,7 @@ import com.github.y_samy.io.storage.Storage;
 public class MainWindow extends javax.swing.JFrame {
 
     private MasterView masterView;
+    @SuppressWarnings("unused")
     private MasterController masterController;
 
     public MainWindow(Storage gameStorage) {

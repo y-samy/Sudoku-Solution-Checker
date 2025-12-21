@@ -91,7 +91,8 @@ public class FileStorage implements Storage {
     public List<String> readCurrentProgress() throws IOException {
         if (!hasCurrentPuzzle())
             throw new IOException();
-        return Files.readAllLines(logfile.toPath());
+        var lines = Files.readAllLines(logfile.toPath());
+        return lines;
     }
 
     @Override
@@ -149,13 +150,15 @@ public class FileStorage implements Storage {
 
     @Override
     public void addUserAction(String userAction) throws IOException {
-        Files.writeString(logfile.toPath(), userAction, StandardOpenOption.APPEND, StandardOpenOption.CREATE,
+        Files.writeString(logfile.toPath(), userAction + "\n", StandardOpenOption.APPEND, StandardOpenOption.CREATE,
                 StandardOpenOption.WRITE);
     }
 
     @Override
     public void removeLastAction() throws IOException {
         var allLines = readCurrentProgress();
+        if (allLines.size() == 0)
+            throw new IOException();
         allLines.removeLast();
         Files.write(logfile.toPath(), allLines, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE,
                 StandardOpenOption.WRITE);

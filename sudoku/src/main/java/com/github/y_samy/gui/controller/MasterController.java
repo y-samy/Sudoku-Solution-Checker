@@ -75,8 +75,16 @@ public class MasterController implements Viewable {
         });
 
         keypad.setOnModify((value) -> {
-            displayedGame.setValueAt(value, board.getSelectedRow(), board.getSelectedColumn());
+            var prev = displayedGame.getValueAt(board.getSelectedRow(), board.getSelectedColumn());
+            var userAction = "(" + board.getSelectedRow() + ", " + board.getSelectedColumn() + ", " + value + ", "
+                    + prev + ")";
+            displayedGame.setValueAt(board.getSelectedRow(), board.getSelectedColumn(), value);
             updateGameDisplay();
+            try {
+                logUserAction(userAction);
+            } catch (IOException e) {
+                showMainMenuError("A storage error has ocurred.");
+            }
         });
 
         keypad.setOnSolve(() -> {
@@ -87,6 +95,7 @@ public class MasterController implements Viewable {
             try {
                 undoLastLog();
                 displayedGame.undo(false);
+                updateGameDisplay();
             } catch (IOException e) {
                 showMainMenuError("A storage error has ocurred.");
             }
