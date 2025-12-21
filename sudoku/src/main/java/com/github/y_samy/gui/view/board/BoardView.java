@@ -1,5 +1,6 @@
 package com.github.y_samy.gui.view.board;
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.util.ArrayList;
@@ -97,6 +98,14 @@ public class BoardView extends JPanel {
         }
     }
 
+    public void markValid(int row, int column) {
+        getCell(row, column).setForeground(new Color(255, 255, 255));
+    }
+
+    public void markInvalid(int row, int column) {
+        getCell(row, column).setForeground(new Color(255, 0, 0));
+    }
+
     private void cellActionPerformed(java.awt.event.ActionEvent evt) {
         var cell = (JToggleButton) evt.getSource();
         if (!isCellSelectable(cell)) {
@@ -126,8 +135,8 @@ public class BoardView extends JPanel {
             constraints.ipadx = CELL_INNER_PADDING;
             constraints.ipady = CELL_INNER_PADDING;
             constraints.insets = (Insets) CELL_INSETS.clone();
-            constraints.insets.left += (i % 3 == 0) ? BOX_INSET : 0;
-            constraints.insets.top += ((i / 9) % 3 == 0) ? BOX_INSET : 0;
+            constraints.insets.left += (i % 9 != 0 && i % 3 == 0) ? BOX_INSET : 0;
+            constraints.insets.top += (i > 9 && (i / 9) % 3 == 0) ? BOX_INSET : 0;
             add(cell, constraints);
             cellList.add(cell);
             cell.setText(" ");
