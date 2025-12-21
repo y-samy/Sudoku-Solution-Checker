@@ -1,9 +1,7 @@
-package com.github.y_samy.io;
+package com.github.y_samy.io.parser;
 
 import java.io.IOException;
 import java.nio.file.Path;
-
-import org.jspecify.annotations.NonNull;
 
 public interface FileParser {
     /**

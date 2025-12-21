@@ -1,23 +1,23 @@
-package com.github.y_samy.io;
+package com.github.y_samy.io.storage;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import org.jspecify.annotations.NonNull;
-
-import com.github.y_samy.sudoku.DifficultyEnum;
+import com.github.y_samy.io.parser.FileParser;
 
 public class FileStorage implements Storage {
 
     private File rootFolder;
     private File currentGameFolder;
-    private Map<DifficultyEnum, File> puzzleFolders;
+    private File logfile;
+    private Map<String, File> puzzleFolders;
     private FileParser parser;
 
     public FileStorage(FileParser parser) throws MalformedStorageException {
@@ -27,11 +27,11 @@ public class FileStorage implements Storage {
 
         currentGameFolder = new File(rootFolder, "incomplete");
         ensureFolder(currentGameFolder);
-
-        for (var difficulty : DifficultyEnum.values()) {
-            var difficultyFolder = new File(rootFolder, difficulty.name().toLowerCase());
-            ensureFolder(difficultyFolder);
-            puzzleFolders.put(difficulty, difficultyFolder);
+        logfile = new File(currentGameFolder, "logfile");
+        var difficultyFolders = List.of(rootFolder.listFiles());
+        difficultyFolders.removeIf(folder -> folder.getName().equals("incomplete"));
+        for (var folder : difficultyFolders) {
+            puzzleFolders.put(folder.getName(), folder);
         }
     }
 
@@ -57,7 +57,7 @@ public class FileStorage implements Storage {
         return commonPuzzles.size() > 0;
     }
 
-    public int @NonNull [] @NonNull [] readCurrentGame() throws MalformedStorageException {
+    public int[][] readCurrentGame() throws MalformedStorageException {
         if (!hasCurrentPuzzle())
             throw new MalformedStorageException();
         var filename = Arrays.stream(currentGameFolder.list()).filter(name -> !name.equals("logfile")).findFirst();
@@ -72,23 +72,39 @@ public class FileStorage implements Storage {
     }
 
     @Override
-    public int @NonNull [] @NonNull [] readCurrentPuzzle() throws MalformedStorageException {
+    public int[][] readCurrentPuzzle() throws IOException {
         if (!hasCurrentPuzzle())
-            throw new MalformedStorageException();
+            throw new IOException();
         var filename = Arrays.stream(currentGameFolder.list()).filter(name -> !name.equals("logfile"))
-                .findFirst().orElseThrow(MalformedStorageException::new).split("-");
-        var difficulty = DifficultyEnum.valueOf(filename[0]);
+                .findFirst().orElseThrow(IOException::new).split("-");
+        var difficulty = filename[0];
         var puzzleId = filename[1];
         var puzzlePath = new File(puzzleFolders.get(difficulty), puzzleId).getAbsolutePath();
         try {
             return parser.load(puzzlePath);
         } catch (IOException e) {
-            throw new MalformedStorageException();
+            throw new IOException();
         }
     }
 
     @Override
-    public int @NonNull [] @NonNull [] loadAndStartPuzzle(@NonNull String difficulty) throws MalformedStorageException {
+    public List<String> readCurrentProgress() throws IOException {
+        if (!hasCurrentPuzzle())
+            throw new IOException();
+        return Files.readAllLines(logfile.toPath());
+    }
+
+    @Override
+    public String getCurrentGameDifficulty() throws IOException {
+        if (!hasCurrentPuzzle())
+            throw new IOException();
+        var filename = Arrays.stream(currentGameFolder.list()).filter(name -> !name.equals("logfile"))
+                .findFirst().orElseThrow(IOException::new).split("-");
+        return filename[0];
+    }
+
+    @Override
+    public int[][] loadAndStartPuzzle(String difficulty) throws MalformedStorageException {
         var puzzleLists = new ArrayList<List<String>>();
         for (var folder : puzzleFolders.values()) {
             puzzleLists.add(Arrays.stream(folder.list()).map(fileName -> fileName.split("-")[1]).toList());
@@ -97,7 +113,7 @@ public class FileStorage implements Storage {
         for (var puzzleList : puzzleLists)
             commonPuzzles.retainAll(puzzleList);
         var fullPuzzleId = difficulty + "-" + commonPuzzles.get(0);
-        var puzzleFile = new File(puzzleFolders.get(DifficultyEnum.valueOf(difficulty)),
+        var puzzleFile = new File(puzzleFolders.get(difficulty),
                 fullPuzzleId);
         var newLogFile = new File(currentGameFolder, "logfile");
         var newCurrentGame = new File(currentGameFolder, fullPuzzleId);
@@ -116,16 +132,30 @@ public class FileStorage implements Storage {
     }
 
     @Override
-    public void savePuzzle(@NonNull String difficulty, @NonNull String identifier, int[][] board) throws IOException {
-        var file = new File(puzzleFolders.get(DifficultyEnum.valueOf(difficulty)),
+    public void savePuzzle(String difficulty, String identifier, int[][] board) throws IOException {
+        var file = new File(puzzleFolders.get(difficulty),
                 difficulty + "-" + identifier);
         parser.write(file.toPath(), board);
     }
 
     @Override
-    public int @NonNull [] @NonNull [] loadSolvedBoard(@NonNull String solvedGamePath)
+    public int[][] loadSolvedBoard(String solvedGamePath)
             throws IOException {
         return parser.load(solvedGamePath);
+    }
+
+    @Override
+    public void addUserAction(String userAction) throws IOException {
+        Files.writeString(logfile.toPath(), userAction, StandardOpenOption.APPEND, StandardOpenOption.CREATE,
+                StandardOpenOption.WRITE);
+    }
+
+    @Override
+    public void removeLastAction() throws IOException {
+        var allLines = readCurrentProgress();
+        allLines.removeLast();
+        Files.write(logfile.toPath(), allLines, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE,
+                StandardOpenOption.WRITE);
     }
 
 }

@@ -1,4 +1,4 @@
-package com.github.y_samy.io;
+package com.github.y_samy.io.storage;
 
 import java.io.IOException;
 
