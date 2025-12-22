@@ -7,9 +7,12 @@ import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import javax.swing.JToggleButton;
+import javax.swing.SwingConstants;
 
 public class BoardView extends JPanel {
+    private JSeparator vSep1, vSep2, hSep1, hSep2;
     private ArrayList<JToggleButton> cellList;
     private int CELL_INNER_PADDING = 24;
     private int BOX_INSET = 4;
@@ -145,12 +148,12 @@ public class BoardView extends JPanel {
                     cell.getFont().getSize() + 7));
             var constraints = new GridBagConstraints();
             constraints.gridx = i % 9;
+            constraints.gridx += constraints.gridx / 3;
             constraints.gridy = i / 9;
+            constraints.gridy += constraints.gridy / 3;
             constraints.ipadx = CELL_INNER_PADDING;
             constraints.ipady = CELL_INNER_PADDING;
             constraints.insets = (Insets) CELL_INSETS.clone();
-            constraints.insets.left += (i % 9 != 0 && i % 3 == 0) ? BOX_INSET : 0;
-            constraints.insets.top += (i > 9 && (i / 9) % 3 == 0) ? BOX_INSET : 0;
             add(cell, constraints);
             cellList.add(cell);
             cell.setText(" ");
@@ -158,6 +161,55 @@ public class BoardView extends JPanel {
                 cell.removeActionListener(l);
             cell.addActionListener(this::cellActionPerformed);
         }
+
+        hSep1 = new JSeparator();
+        hSep1.setBorder(javax.swing.BorderFactory
+                .createLineBorder(javax.swing.UIManager.getDefaults().getColor("Button.foreground"), 10));
+        var constraints = new GridBagConstraints();
+        constraints.gridx = 0;
+        constraints.gridy = 3;
+        constraints.gridwidth = 11;
+        constraints.ipady = 2;
+        constraints.fill = java.awt.GridBagConstraints.BOTH;
+        add(hSep1, constraints);
+
+        hSep2 = new JSeparator();
+        hSep2.setBorder(javax.swing.BorderFactory
+                .createLineBorder(javax.swing.UIManager.getDefaults().getColor("Button.foreground"), 10));
+        constraints = new GridBagConstraints();
+        constraints.gridx = 0;
+        constraints.gridy = 7;
+        constraints.gridwidth = 11;
+        constraints.ipady = 2;
+        constraints.fill = java.awt.GridBagConstraints.BOTH;
+        add(hSep2, constraints);
+
+        vSep1 = new JSeparator();
+        vSep1.setOrientation(SwingConstants.VERTICAL);
+        vSep1.setBorder(javax.swing.BorderFactory
+                .createLineBorder(javax.swing.UIManager.getDefaults().getColor("Button.foreground"), 10));
+        constraints = new GridBagConstraints();
+        constraints.gridx = 3;
+        constraints.gridy = 0;
+        constraints.gridheight = 11;
+        constraints.ipadx = 2;
+        constraints.fill = java.awt.GridBagConstraints.BOTH;
+        add(vSep1, constraints);
+
+        vSep2 = new JSeparator();
+        vSep2.setBorder(javax.swing.BorderFactory
+                .createLineBorder(javax.swing.UIManager.getDefaults().getColor("Button.foreground"), 10));
+        vSep2.setOrientation(SwingConstants.VERTICAL);
+        constraints = new GridBagConstraints();
+        constraints.gridx = 7;
+        constraints.gridy = 0;
+        constraints.gridheight = 11;
+        constraints.ipadx = 2;
+        constraints.fill = java.awt.GridBagConstraints.BOTH;
+        add(vSep2, constraints);
+
+        this.setBorder(javax.swing.BorderFactory
+            .createLineBorder(javax.swing.UIManager.getDefaults().getColor("Button.foreground"), 10));
     }
 
 }
