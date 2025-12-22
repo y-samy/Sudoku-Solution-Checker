@@ -15,9 +15,11 @@ public class Solver {
         Game attemptedSolution = null;
         for (var c : combinations) {
             attemptedSolution = new Game(flyweightBoard, c);
+            if (attemptedSolution.isValid()) {
+                solution = attemptedSolution;
+                return;
+            }
         }
-        if (attemptedSolution != null)
-            solution = attemptedSolution;
     }
 
     public boolean isValid() {

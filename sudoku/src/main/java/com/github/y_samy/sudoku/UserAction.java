@@ -9,4 +9,9 @@ public class UserAction {
         this.previousValue = previousValue;
         this.currentValue = currentValue;
     }
+
+    public String toString() {
+        return "(" + row + ", " + column + ", " + currentValue + ", "
+                + previousValue + ")";
+    }
 }

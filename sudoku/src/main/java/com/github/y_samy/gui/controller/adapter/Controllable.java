@@ -1,4 +1,4 @@
-package com.github.y_samy.gui.view;
+package com.github.y_samy.gui.controller.adapter;
 
 import java.io.IOException;
 
@@ -7,6 +7,7 @@ import com.github.y_samy.gui.model.NotFoundException;
 import com.github.y_samy.gui.model.SolutionInvalidException;
 import com.github.y_samy.sudoku.UserAction;
 
+// Adapter interface
 public interface Controllable {
     public boolean[] getCatalog();
 

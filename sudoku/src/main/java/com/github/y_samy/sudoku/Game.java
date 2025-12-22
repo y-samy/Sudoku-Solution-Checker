@@ -16,18 +16,22 @@ public class Game {
     private DifficultyEnum difficulty;
     private Stack<UserAction> oldProgress;
     private Stack<UserAction> newProgress;
+    private boolean playable;
 
     public static Game createSolutionBoard(int[][] board) {
         return new Game(board);
     }
 
     private Game(int[][] board) {
+        playable = false;
         this.board = board;
         referenceId = Math.abs(Arrays.deepHashCode(board));
     }
 
     Game(int[][] board, int[] modifiedCells) {
+        playable = false;
         this.board = board;
+        this.modifiableCells = new HashMap<>();
         int i = 0;
         for (int r = 0; r < 9; r++)
             for (int c = 0; c < 9; c++)
@@ -40,6 +44,7 @@ public class Game {
     }
 
     public Game(int[][] board, DifficultyEnum difficulty) {
+        playable = true;
         this.board = board;
         this.difficulty = difficulty;
         modifiableCells = new HashMap<>(0);
@@ -89,13 +94,15 @@ public class Game {
     }
 
     public boolean modifiable(int row, int column) {
+        if (!playable)
+            return false;
         return modifiableCells.containsKey(row * 9 + column);
     }
 
     public void setValueAt(int row, int column, int value) {
         if (!modifiable(row, column))
             return;
-        newProgress.push(new UserAction(row, column, getValueAt(row, column), value));
+        newProgress.push(new UserAction(row, column, value, getValueAt(row, column)));
         modifiableCells.put(row * 9 + column, value);
     }
 
@@ -106,10 +113,14 @@ public class Game {
     }
 
     public boolean canUndo(boolean includeOldProgress) {
+        if (!playable)
+            return false;
         return !newProgress.isEmpty() | (includeOldProgress && !oldProgress.isEmpty());
     }
 
     public void undo(boolean includeOldProgress) {
+        if (!playable)
+            return;
         UserAction lastAction;
         if (!newProgress.isEmpty())
             lastAction = newProgress.pop();
@@ -124,26 +135,68 @@ public class Game {
         return difficulty;
     }
 
-    public List<Integer> getInvalidModifiable() {
+    public List<Integer> getInvalid() {
         var results = new ArrayList<Integer>(0);
         var rowMasks = new int[9];
         var columnMasks = new int[9];
         var boxMasks = new int[9];
-        for (var row = 0; row < 9; row++) {
-            for (var col = 0; col < 9; col++) {
-                int cellValue = getValueAt(row, col);
 
+        var rowFirstOccurrence = new int[9][10]; // [row][value] -> index
+        var colFirstOccurrence = new int[9][10]; // [col][value] -> index
+        var boxFirstOccurrence = new int[9][10]; // [box][value] -> index
+
+        for (int i = 0; i < 9; i++) {
+            for (int v = 0; v <= 9; v++) {
+                rowFirstOccurrence[i][v] = -1;
+                colFirstOccurrence[i][v] = -1;
+                boxFirstOccurrence[i][v] = -1;
+            }
+        }
+
+        for (int row = 0; row < 9; row++) {
+            for (int col = 0; col < 9; col++) {
+                int cellValue = getValueAt(row, col);
                 if (cellValue == 0)
                     continue;
 
-                // invalidity check
                 int box = (row / 3) * 3 + (col / 3);
                 int mask = 1 << (cellValue - 1);
                 int idx = row * 9 + col;
-                if (modifiableCells.containsKey(idx)) {
-                    if ((rowMasks[row] & mask) != 0 || (columnMasks[col] & mask) != 0
-                            || (boxMasks[box] & mask) != 0)
-                        results.add(row * 9 + col);
+
+                boolean isDuplicate = false;
+
+                if ((rowMasks[row] & mask) != 0) {
+                    isDuplicate = true;
+                    int firstIdx = rowFirstOccurrence[row][cellValue];
+                    if (!results.contains(firstIdx)) {
+                        results.add(firstIdx);
+                    }
+                } else {
+                    rowFirstOccurrence[row][cellValue] = idx;
+                }
+
+                if ((columnMasks[col] & mask) != 0) {
+                    isDuplicate = true;
+                    int firstIdx = colFirstOccurrence[col][cellValue];
+                    if (!results.contains(firstIdx)) {
+                        results.add(firstIdx);
+                    }
+                } else {
+                    colFirstOccurrence[col][cellValue] = idx;
+                }
+
+                if ((boxMasks[box] & mask) != 0) {
+                    isDuplicate = true;
+                    int firstIdx = boxFirstOccurrence[box][cellValue];
+                    if (!results.contains(firstIdx)) {
+                        results.add(firstIdx);
+                    }
+                } else {
+                    boxFirstOccurrence[box][cellValue] = idx;
+                }
+
+                if (isDuplicate && !results.contains(idx)) {
+                    results.add(idx);
                 }
 
                 rowMasks[row] |= mask;
@@ -151,6 +204,7 @@ public class Game {
                 boxMasks[box] |= mask;
             }
         }
+
         return results;
     }
 

@@ -1,4 +1,4 @@
-package com.github.y_samy.gui.controller;
+package com.github.y_samy.gui.mastercontroller;
 
 import java.io.IOException;
 
@@ -7,7 +7,6 @@ import javax.swing.JOptionPane;
 import com.github.y_samy.gui.MainWindow;
 import com.github.y_samy.gui.model.Catalog;
 import com.github.y_samy.gui.model.Driver;
-import com.github.y_samy.gui.model.InvalidGame;
 import com.github.y_samy.gui.model.Loader;
 import com.github.y_samy.gui.model.NotFoundException;
 import com.github.y_samy.gui.model.SolutionInvalidException;
@@ -18,8 +17,9 @@ import com.github.y_samy.gui.view.mainmenu.MainMenuView;
 import com.github.y_samy.io.storage.Storage;
 import com.github.y_samy.sudoku.DifficultyEnum;
 import com.github.y_samy.sudoku.Game;
+import com.github.y_samy.sudoku.Solver;
 
-public class MasterController implements Viewable {
+public class MasterController {
 
     private MasterView view;
     private KeypadView keypad;
@@ -79,16 +79,23 @@ public class MasterController implements Viewable {
             var userAction = "(" + board.getSelectedRow() + ", " + board.getSelectedColumn() + ", " + value + ", "
                     + prev + ")";
             displayedGame.setValueAt(board.getSelectedRow(), board.getSelectedColumn(), value);
-            updateGameDisplay();
             try {
                 logUserAction(userAction);
+                updateGameDisplay();
             } catch (IOException e) {
                 showMainMenuError("A storage error has ocurred.");
             }
         });
 
         keypad.setOnSolve(() -> {
-
+            var solver = new Solver(displayedGame);
+            solver.solveGame(displayedGame);
+            if (!solver.isValid()) {
+                board.showDeadlockPopup();
+            } else {
+                displayedGame = solver.getSolution();
+                updateGameDisplay();
+            }
         });
 
         keypad.setOnUndo(() -> {
@@ -114,6 +121,16 @@ public class MasterController implements Viewable {
         view.showGame();
     }
 
+    private void gameIsSolved() {
+        try {
+            loader.endGame();
+            board.showSolvedPopup();
+        } catch (IOException e) {
+            MainWindow.showStorageFailure();
+        }
+        displayMainMenu();
+    }
+
     private void updateGameDisplay() {
         for (int r = 0; r < 9; r++) {
             for (int c = 0; c < 9; c++) {
@@ -122,9 +139,14 @@ public class MasterController implements Viewable {
                 board.markValid(r, c);
             }
         }
-        for (int invalidCellIdx : displayedGame.getInvalidModifiable())
+        var invalidCells = displayedGame.getInvalid();
+        for (int invalidCellIdx : invalidCells)
             board.markInvalid(invalidCellIdx / 9, invalidCellIdx % 9);
         keypad.setUndoEnabled(displayedGame.canUndo(false));
+        keypad.setSolveEnabled(displayedGame.getEmptyCellPositions().size() == 5
+                && invalidCells.size() == 0);
+        if (invalidCells.size() == 0 && displayedGame.getEmptyCellPositions().size() == 0)
+            gameIsSolved();
     }
 
     private void updateMainMenu() {
@@ -141,7 +163,6 @@ public class MasterController implements Viewable {
         view.showMainMenu();
     }
 
-    @Override
     public Catalog getCatalog() {
         return catalog;
     }
@@ -150,12 +171,10 @@ public class MasterController implements Viewable {
         return loader.readCurrentGame();
     }
 
-    @Override
     public Game getGame(DifficultyEnum level) throws NotFoundException {
         return loader.startNewGame(level);
     }
 
-    @Override
     public void driveGames(Game sourceGame) throws SolutionInvalidException {
         if (!sourceGame.isValid())
             throw new SolutionInvalidException();
@@ -174,19 +193,6 @@ public class MasterController implements Viewable {
         }
     }
 
-    @Override
-    public String verifyGame(Game game) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'verifyGame'");
-    }
-
-    @Override
-    public int[] solveGame(Game game) throws InvalidGame {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'solveGame'");
-    }
-
-    @Override
     public void logUserAction(String userAction) throws IOException {
         storage.addUserAction(userAction);
     }

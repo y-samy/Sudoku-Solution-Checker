@@ -18,9 +18,11 @@ public interface Storage {
 
     public String getCurrentGameDifficulty() throws IOException;
 
-    public int[][] loadAndStartPuzzle(String difficulty) throws MalformedStorageException;
+    public int[][] loadAndStartPuzzle(String difficulty) throws IOException;
 
     public void savePuzzle(String difficulty, String identifier, int[][] board) throws IOException;
 
     public int[][] loadSolvedBoard(String solvedGamePath) throws IOException;
+
+    public void deleteCurrentGame() throws IOException;
 }

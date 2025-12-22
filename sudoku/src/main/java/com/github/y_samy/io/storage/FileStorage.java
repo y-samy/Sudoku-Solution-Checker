@@ -105,8 +105,9 @@ public class FileStorage implements Storage {
     }
 
     @Override
-    public int[][] loadAndStartPuzzle(String difficulty) throws MalformedStorageException {
-        var puzzleLists = new ArrayList<List<String>>();
+    public int[][] loadAndStartPuzzle(String difficulty) throws IOException {
+        var puzzleLists = new ArrayList<ArrayList<String>>();
+        deleteCurrentGame();
         for (var folder : puzzleFolders.values()) {
             puzzleLists.add(new ArrayList<>(
                     Arrays.stream(folder.list()).map(fileName -> fileName.split("-")[1]).toList()));
@@ -119,19 +120,19 @@ public class FileStorage implements Storage {
         var fullPuzzleId = difficulty + "-" + commonPuzzles.get(0);
         var puzzleFile = new File(puzzleFolders.get(difficulty),
                 fullPuzzleId);
-        var newLogFile = new File(currentGameFolder, "logfile");
+        var logfile = new File(currentGameFolder, "logfile");
         var newCurrentGame = new File(currentGameFolder, fullPuzzleId);
         try {
             Files.copy(puzzleFile.toPath(), newCurrentGame.toPath(),
                     StandardCopyOption.REPLACE_EXISTING);
-            newLogFile.delete();
-            if (!newLogFile.createNewFile())
+            logfile.delete();
+            if (!logfile.createNewFile())
                 throw new IOException();
             return parser.load(puzzleFile.getAbsolutePath());
         } catch (IOException e) {
             newCurrentGame.delete();
-            newLogFile.delete();
-            throw new MalformedStorageException();
+            logfile.delete();
+            throw e;
         }
     }
 
@@ -162,6 +163,19 @@ public class FileStorage implements Storage {
         allLines.removeLast();
         Files.write(logfile.toPath(), allLines, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE,
                 StandardOpenOption.WRITE);
+    }
+
+    @Override
+    public void deleteCurrentGame() throws IOException {
+        var puzzleId = getCurrentPuzzleId();
+        for (var folder : puzzleFolders.values()) {
+            for (var file : folder.listFiles()) {
+                if (file.getName().split("-")[1].equals(puzzleId))
+                    file.delete();
+            }
+        }
+        for (var file : currentGameFolder.listFiles())
+            file.delete();
     }
 
 }

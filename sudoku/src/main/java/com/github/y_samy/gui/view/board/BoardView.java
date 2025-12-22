@@ -5,6 +5,7 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
@@ -77,7 +78,8 @@ public class BoardView extends JPanel {
 
     public int getSelectedRow() {
         var cell = getSelectedCell();
-        if (cell == null) return -1;
+        if (cell == null)
+            return -1;
         var cellIdx = cellList.indexOf(cell);
         var row = cellIdx / 9;
         return row;
@@ -85,7 +87,8 @@ public class BoardView extends JPanel {
 
     public int getSelectedColumn() {
         var cell = getSelectedCell();
-        if (cell == null) return -1;
+        if (cell == null)
+            return -1;
         var cellIdx = cellList.indexOf(cell);
         var column = cellIdx % 9;
         return column;
@@ -93,9 +96,6 @@ public class BoardView extends JPanel {
 
     public void clearSelection() {
         for (var cell : cellList) {
-            if (cell.isSelected()) {
-                selectionCallback.notifyUpdated();
-            }
             cell.setSelected(false);
         }
     }
@@ -119,8 +119,20 @@ public class BoardView extends JPanel {
         if (newlySelected) {
             clearSelection();
             cell.setSelected(true);
-            selectionCallback.notifyUpdated();
         }
+        selectionCallback.notifyUpdated();
+    }
+
+    public void showDeadlockPopup() {
+        JOptionPane.showMessageDialog(null, "Pre-solution state is prospectively invalid",
+                "Invalid State - Can Not Solve",
+                JOptionPane.ERROR_MESSAGE);
+    }
+
+    public void showSolvedPopup() {
+        JOptionPane.showMessageDialog(null, "The game has been solved. Returning to main menu.",
+                "Solved!",
+                JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void initComponents() {

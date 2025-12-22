@@ -98,9 +98,10 @@ public class KeypadView extends JPanel {
             });
             add(btn);
             numButtons[i - 1] = btn;
+            btn.setFont(btn.getFont().deriveFont((float) 16));
         }
         var delImg = new ImageIcon(getClass().getResource("/icons/del.png")).getImage();
-        var delIcon = new ImageIcon(delImg.getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+        var delIcon = new ImageIcon(delImg.getScaledInstance(32, 32, Image.SCALE_SMOOTH));
         delBtn = new JButton(delIcon);
         delBtn.addActionListener((evt) -> {
             getOnModify().callback(0);
@@ -108,7 +109,7 @@ public class KeypadView extends JPanel {
         add(delBtn);
 
         var undoImg = new ImageIcon(getClass().getResource("/icons/undo.png")).getImage();
-        var undoIcon = new ImageIcon(undoImg.getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+        var undoIcon = new ImageIcon(undoImg.getScaledInstance(32, 32, Image.SCALE_SMOOTH));
         undoBtn = new JButton(undoIcon);
         undoBtn.addActionListener((evt) -> {
             getOnUndo().callback();
@@ -116,7 +117,7 @@ public class KeypadView extends JPanel {
         add(undoBtn);
 
         var redoImg = new ImageIcon(getClass().getResource("/icons/solve.png")).getImage();
-        var redoIcon = new ImageIcon(redoImg.getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+        var redoIcon = new ImageIcon(redoImg.getScaledInstance(32, 32, Image.SCALE_SMOOTH));
         solveBtn = new JButton(redoIcon);
         solveBtn.addActionListener((evt) -> {
             getOnSolve().callback();

@@ -10,16 +10,18 @@ import com.github.y_samy.sudoku.DifficultyEnum;
 import com.github.y_samy.sudoku.Game;
 
 public interface Viewable {
-    Catalog getCatalog();
+    public Catalog getCatalog();
 
-    Game getGame(DifficultyEnum level) throws NotFoundException;
+    public Game getGame(DifficultyEnum level) throws NotFoundException;
 
-    void driveGames(Game sourceGame) throws SolutionInvalidException;
+    public void driveGames(Game sourceGame) throws SolutionInvalidException;
 
-    String verifyGame(Game game);
+    public String verifyGame(Game game);
 
-    int[] solveGame(Game game) throws InvalidGame;
+    public int[] solveGame(Game game) throws InvalidGame;
 
-    void logUserAction(String userAction) throws IOException;
+    public void logUserAction(String userAction) throws IOException;
+
+    public void undoLastLog() throws IOException;
 
 }

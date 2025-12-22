@@ -29,6 +29,10 @@ public class Loader {
         }
     }
 
+    public void endGame() throws IOException {
+        storage.deleteCurrentGame();
+    }
+
     public Game startNewGame(DifficultyEnum difficulty) throws NotFoundException {
         try {
             return new Game(storage.loadAndStartPuzzle(difficulty.name()), difficulty);

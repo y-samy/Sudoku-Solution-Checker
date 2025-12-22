@@ -2,7 +2,7 @@ package com.github.y_samy.gui;
 
 import javax.swing.JOptionPane;
 
-import com.github.y_samy.gui.controller.MasterController;
+import com.github.y_samy.gui.mastercontroller.MasterController;
 import com.github.y_samy.gui.view.MasterView;
 import com.github.y_samy.io.storage.Storage;
 
