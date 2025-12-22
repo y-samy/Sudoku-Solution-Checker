@@ -1,1 +1,1 @@
-# Soduko-Solution-Checker
+# Soduko
