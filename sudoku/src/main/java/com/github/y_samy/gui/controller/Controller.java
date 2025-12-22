@@ -74,16 +74,13 @@ public class Controller implements Viewable {
     public int[] solveGame(Game game) throws InvalidGame {
         var solver = new Solver(game);
         solver.solveGame(game);
-        return null;
+        if (!solver.isValid())
+            throw new InvalidGame();
+        return solver.getSolutionCombination();
     }
 
     @Override
     public void logUserAction(String userAction) throws IOException {
         storage.addUserAction(userAction);
-    }
-
-    @Override
-    public void undoLastLog() throws IOException {
-        storage.removeLastAction();
     }
 }

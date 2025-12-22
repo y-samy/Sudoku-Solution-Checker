@@ -21,7 +21,4 @@ public interface Viewable {
     public int[] solveGame(Game game) throws InvalidGame;
 
     public void logUserAction(String userAction) throws IOException;
-
-    public void undoLastLog() throws IOException;
-
 }

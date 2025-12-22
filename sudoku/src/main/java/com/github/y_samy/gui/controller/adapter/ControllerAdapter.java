@@ -53,13 +53,45 @@ public class ControllerAdapter implements Controllable {
     @Override
     public boolean[][] verifyGame(int[][] game) {
         var validityArray = new boolean[9][9];
-        return null;
+        var promotedGame = Game.createSolutionBoard(game);
+        var validityString = controller.verifyGame(promotedGame);
+        if ("incomplete".equals(validityString)) {
+            var incomplete = promotedGame.getEmptyCellPositions();
+            for (int r = 0; r < 9; r++) {
+                for (int c = 0; c < 9; c++) {
+                    validityArray[r][c] = !incomplete.contains(r * 9 + c);
+                }
+            }
+        } else if ("valid".equals(validityString)) {
+            for (int r = 0; r < 9; r++) {
+                for (int c = 0; c < 9; c++) {
+                    validityArray[r][c] = true;
+                }
+            }
+        } else {
+            var duplicates = Arrays.stream(
+                    validityString.replace("invalid ", "").replace("[", "").replace("]", "").split("(\\s*),(\\s*)"))
+                    .map(Integer::parseInt).toList();
+            for (int r = 0; r < 9; r++) {
+                for (int c = 0; c < 9; c++) {
+                    validityArray[r][c] = !duplicates.contains(r * 9 + c);
+                }
+            }
+        }
+        return validityArray;
     }
 
     @Override
     public int[][] solveGame(int[][] game) throws InvalidGame {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'solveGame'");
+        var oldGame = Game.createSolutionBoard(game);
+        var empty = oldGame.getEmptyCellPositions();
+        var oldBoard = oldGame.copyBoard();
+        var solvedGame = controller.solveGame(oldGame);
+        int i = 0;
+        for (var idx : empty) {
+            oldBoard[idx / 9][idx % 9] = solvedGame[i++];
+        }
+        return oldBoard;
     }
 
     @Override
